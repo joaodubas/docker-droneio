@@ -13,7 +13,10 @@ RUN cd /tmp \
     && wget http://downloads.drone.io/latest/drone.deb \
     && dpkg -i drone.deb
 
+# add folder for drone.io db
+RUN mkdir -p /var/lib/drone/
+
 # configure container executiosn
-VOLUME ["/var/run/docker.sock", "/usr/bin/docker"]
-EXPOSE 80 8080
+EXPOSE 8080
 ENTRYPOINT ["/usr/local/bin/droned"]
+CMD ["-datasource", "/var/lib/drone/drone.sqlite", "-port", ":8080"]

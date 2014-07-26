@@ -12,16 +12,13 @@ To get started it's recommended to [read the documentation][droneio-docs] and
 
 ## Running
 
-Since [drone.io][droneio] needs [docker][docker] to run, the image expects two
-volumes to be mounted:
+Since [drone.io][droneio] needs [docker][docker] to run, it's necessary to
+mount docker command line and the docker socket. This way the container will
+have access to your `docker-cli` and `docker-daemon`, as [showed by Nathan
+Leclaire][docker-tips].
 
-1. `/usr/bin/docker`
-2. `/var/run/docker.sock`
-
-So it will have access to your `docker-cli` and `docker-daemon` (I really don't
-know if this is the best way to expose this services).
-
-Besides these two volumes the ports _80_ and _8080_ are exposed.
+To access the [drone.io][droneio] service, the port _8080_ is exposed, so a
+mapping port between host and container can be stablished.
 
 To start a container running [drone.io][droneio]:
 
@@ -39,15 +36,23 @@ docker run \
 And this will get you a running instance of [drone.io][droneio] o/.
 
 It's important to note that your repositories are cloned to
-`/var/cache/drone/src/github.com/$owner/$name` directory. So it would be wise
-to use a [data volume container][docker-volume-container] to manage this
-directory.
+[`/var/cache/drone/src/github.com/$owner/$name`][droneio-env] directory. So it
+would be wise to use a [data volume container][docker-volume-container] to
+manage this directory.
+
+Besides the cloned repos, the `sqlite` database used by [drone.io][droneio] is
+available in `/var/lib/drone/drone.sqlite`, so another [data volume container]
+[docker-volume-container] can be used to share this database with other
+services, such as [drone wall][droneio-wall].
 
 [droneio]: http://blog.drone.io
 [droneio-docs]: http://docs.drone.io/
 [droneio-git]: https://github.com/drone/drone
+[droneio-env]: https://github.com/drone/drone#environment
+[droneio-wall]: https://github.com/drone/drone-wall
 [docker]: https://docker.com/
 [docker-volume-container]: https://docs.docker.com/userguide/dockervolumes/#creating-and-mounting-a-data-volume-container
+[docker-tips]: http://nathanleclaire.com/blog/2014/07/12/10-docker-tips-and-tricks-that-will-make-you-sing-a-whale-song-of-joy/
 
 ## License
 
