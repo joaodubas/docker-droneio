@@ -1,0 +1,13 @@
+[database]
+driver="sqlite3"
+datasource="/var/lib/drone/drone.sqlite"
+
+
+[registration]
+open=false
+
+[worker]
+nodes=[
+  "unix:///var/run/docker.sock",
+  "unix:///var/run/docker.sock"
+]

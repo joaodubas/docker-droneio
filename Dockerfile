@@ -14,8 +14,10 @@ RUN echo "update system and install needed deps" \
     && dpkg -i drone.deb \
     && echo "add folder for drone.io db" \
     && mkdir -p /var/lib/drone/
+ADD drone.toml /var/lib/drone/drone.toml
 
 # configure container execution
 EXPOSE 8080
+ENV DRONE_SERVER_PORT :8080
 ENTRYPOINT ["/usr/local/bin/droned"]
-CMD ["-datasource", "/var/lib/drone/drone.sqlite", "-port", ":8080"]
+CMD ["--config", "/var/lib/drone/drone.toml"]
